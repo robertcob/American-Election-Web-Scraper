@@ -6,6 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 from raw_Data_Edit import *
 from database_Design import *
 
+
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 driver = webdriver.Chrome(PATH)
 
@@ -30,7 +31,8 @@ def check_exists_by_xpath(xpath):
 
 
 # function will take a list of states and search real clear politics for polling data, and record any polling data in a text file to be processed
-def Collect_Data(state_List):
+#update_Value if true means that only the 'polling_Data_Rcp table (smaller top table on page) needs to be scraped by selenium as we are only doing a minor update not a mass update
+def Collect_Data(state_List, update_Value):
     poll_Unavailable_Xpath = '//*[@id="container"]/div[3]/div/div[2]/div[1]/div[3]/div[3]/span[2]/div/div/div'
     for state in state_List:
         driver.get("https://www.realclearpolitics.com/epolls/latest_polls/")
@@ -46,35 +48,53 @@ def Collect_Data(state_List):
         time.sleep(2)
 
         print("Collecting election Polling data on the state of %s" % state)
-
-        if check_exists_by_xpath('//*[@id="polling-data-rcp"]/table') == False:
-            print("No recent polling data on this State, searching for older data....")
-            table2 = driver.find_element_by_xpath('//*[@id="polling-data-full"]')
-            data_Writing(table2)
+        if update_Value == True:
+            if check_exists_by_xpath('//*[@id="polling-data-rcp"]/table') == False:
+                continue
+            else:
+                table1 = driver.find_element_by_xpath('//*[@id="polling-data-rcp"]/table')
+                data_Writing(table1, state)
+            print("\n")
 
         else:
-            table1 = driver.find_element_by_xpath('//*[@id="polling-data-rcp"]/table')
-            table2 = driver.find_element_by_xpath('//*[@id="polling-data-full"]')
-            data_Writing(table1)
-            data_Writing(table2)
-        print("\n")
+            if check_exists_by_xpath('//*[@id="polling-data-rcp"]/table') == False:
+                print("No recent polling data on this State, searching for older data....")
+                table2 = driver.find_element_by_xpath('//*[@id="polling-data-full"]')
+                data_Writing(table2, state)
+
+            else:
+                table1 = driver.find_element_by_xpath('//*[@id="polling-data-rcp"]/table')
+                table2 = driver.find_element_by_xpath('//*[@id="polling-data-full"]')
+                data_Writing(table1, state)
+                data_Writing(table2, state)
+            print("\n")
+
+
 
 #writes scraped data to text file
-def data_Writing(table_Object):
+def data_Writing(table_Object, state_Name):
     infile = open("polling_Data.txt", "a")
+    pre_State_Values = ["Biden", "Trump", "Tie"]
     for row in table_Object.find_elements_by_tag_name("tr"):
         for cell in row.find_elements_by_tag_name("td"):
             if cell.text == "RCP Average":
                 break
             infile.write(cell.text + "\n")
+
+            for v in pre_State_Values:
+                if v in cell.text:
+                    infile.write(state_Name + "\n")
     infile.close()
 
 
 #calling functions from other files.
-Collect_Data(total_States)
-Sort_Data()
-data_To_Be_Exported = export_Data("new_polling_data.txt")
-print(data_To_Be_Exported)
-database_Insertions(data_To_Be_Exported)
+def main():
+    Collect_Data(total_States, False)
+    Sort_Data()
+    database_Creation()
+    data = export_Data("new_polling_data.txt")
+    database_Insertions(data)
 
-./mnt/c/Users/rober/PycharmProjects/Election_Scraper/basemap.py
+if __name__ == "__main__":
+    main()
+
