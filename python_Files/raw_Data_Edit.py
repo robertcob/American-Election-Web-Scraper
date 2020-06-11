@@ -2,6 +2,7 @@ import re
 
 #input '5/7 - 5/9'
 #expected output '05-07-2020'
+
 def Convert_Date_Format(old_Date):
     new_Date = '2020'
     number = ''
