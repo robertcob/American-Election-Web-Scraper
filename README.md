@@ -39,7 +39,7 @@ List of all resources used
 * Selenium
 * Matplotlib
 * Numpy
-* Pandas, Pandas, csv edit etc
+* GeoPandas, Pandas, csv edit etc
 * Arc Gis
 * Mongodb/Pymongo
 
