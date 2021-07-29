@@ -6,8 +6,6 @@ from shapely.geometry import Polygon
 from shapely.geometry import Point, Polygon
 import numpy as np
 
-
-
 poly_States = gpd.read_file("electoral_Map_Final.shp")
 
 null_Color = "#29ff4d"
@@ -59,20 +57,11 @@ def state_Plotter():
                     poly_States[poly_States.STATE_NAME == state].plot(ax=ax, edgecolor='white', linewidth=1.5,
                                                                       color=safe_B)
 
-
-
-
-
-
-
 list_Of_States = states = ["AL", "AK",  "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI",
            "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
           "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
           "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
           "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
-
-
-
 
 us_map = state_Plotter()
 
