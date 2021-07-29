@@ -78,10 +78,6 @@ def Collect_Data(state_List, update_Value):
     print(full)
     return full
 
-
-
-
-
 #writes scraped data to text file
 def data_Writing(table_Object, state_Name):
 
@@ -132,4 +128,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
