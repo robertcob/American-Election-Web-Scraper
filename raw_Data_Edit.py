@@ -43,12 +43,3 @@ def Sort_Data():
     with open("new_polling_data.txt", "w") as outfile:
         for line in new_data:
             outfile.write(line+'\n')
-
-
-
-
-
-
-
-
-
